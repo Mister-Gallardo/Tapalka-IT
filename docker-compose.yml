@@ -2,7 +2,7 @@ version: '3.3'
 
 networks:
   default_network:
-    external: true
+    driver: bridge
 
 services:
   test_web:
@@ -17,21 +17,34 @@ services:
       - .:/app
     networks:
       - default_network
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+    networks:
+      - default_network
+  bot:
+    build:
+      context: .
+    command: python bot.py
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    expose:
+      - "8003"
+    ports:
+      - "8003:8003"
+    depends_on:
+      - test_web
+    networks:
+      - default_network
 
-#  bot:
-#    build:
-#      context: .
-#    command: python bot.py
-#    env_file:
-#      - .env
-#    volumes:
-#      - .:/app
-#    expose:
-#      - "8003"
-#    ports:
-#      - "8003:8003"
-#    depends_on:
-#      - web
-#    networks:
-#      - default_network
-
+volumes:
+  redis_data:

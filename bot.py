@@ -14,7 +14,7 @@ bot_key = settings.BOT
 def webapp_builder() -> InlineKeyboardBuilder:
     builder = InlineKeyboardBuilder()
     builder.button(
-        text="⛏ Play",
+        text="🍋 🍊 Запустить WebApp",
         web_app=WebAppInfo(
            url=settings.WEBAPP_URL, HapticFeedback=True
         )
@@ -27,8 +27,7 @@ router = Router()
 @router.message(CommandStart())
 async def start(message: Message, command: CommandObject, bot: Bot):
     first_name = message.from_user.first_name
-    tg_id = int(message.from_user.id)
-    await message.answer(f"Привет {first_name}, вот твой Id:{tg_id} для теста!",
+    await message.answer(f"Привет {first_name}, ниже ссылка для запуска WebApp",
                          reply_markup=webapp_builder())
 
 

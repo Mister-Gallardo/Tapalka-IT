@@ -53,7 +53,7 @@ async def websocket_count_gain(websocket: WebSocket, user_id: str):
         while True:
             try:
                 data = await websocket.receive_json()
-                counter = float(data.get('counter'))
+                counter = float(data.get('coins'))
                 if counter is not None:
                     redis_instance.set(f"test_counter_{user_id}", str(counter))
                     await manager.send_message(f"Counter updated: {counter}", websocket)
