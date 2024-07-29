@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import "./styles/styles.scss";
 
 interface IPosition {
@@ -48,10 +48,11 @@ function App() {
           <img src="images/score_coin.png" width="30px"></img>
           <Typography>{count}</Typography>
         </Box>
-        <Box
+        <Button
           className="tap-counter"
           onTouchStart={handleTap}
-          sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
+          disableRipple
+          sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center", ":active": {backgroundColor: 'none'} }}
         >
           <img src="images/fruit.png" className="fruit-image"></img>
           {tapCount > 0 && tapPosition && (
@@ -62,7 +63,7 @@ function App() {
               +{tapCount}
             </Box>
           )}
-        </Box>
+        </Button>
         <Typography
           sx={{
             display: { xs: "none", md: "block" },
