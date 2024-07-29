@@ -44,21 +44,21 @@ function App() {
           margin: "0 auto",
         }}
       >
-        <Box component="div" className="score" onTouchStart={handleTap}>
+        <Box component="div" className="score">
           <img src="images/score_coin.png" width="30px"></img>
           <Typography>{count}</Typography>
         </Box>
         <Button
           className="tap-counter"
-          onTouchStart={handleTap}
+          // onTouchStart={handleTap}
           disableRipple
-          sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center", ":active": {backgroundColor: 'none'} }}
+          sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
         >
-          <img src="images/fruit.png" className="fruit-image"></img>
+          <img onTouchStart={handleTap} src="images/fruit.png" className="fruit-image"></img>
           {tapCount > 0 && tapPosition && (
             <Box
               className="tap-message"
-              style={{ left: tapPosition.x, top: tapPosition.y }}
+              style={{ position: 'absolute', left: tapPosition.x, top: tapPosition.y }}
             >
               +{tapCount}
             </Box>
