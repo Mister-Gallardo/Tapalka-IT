@@ -45,7 +45,7 @@ function App() {
         }}
       >
         <Box component="div" className="score" onTouchStart={handleTap}>
-          <img src="public/images/score_coin.png" width="30px"></img>
+          <img src="images/score_coin.png" width="30px"></img>
           <Typography>{count}</Typography>
         </Box>
         <Box
@@ -53,7 +53,7 @@ function App() {
           onTouchStart={handleTap}
           sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
         >
-          <img src="public/images/fruit.png" className="fruit-image"></img>
+          <img src="images/fruit.png" className="fruit-image"></img>
           {tapCount > 0 && tapPosition && (
             <Box
               className="tap-message"
