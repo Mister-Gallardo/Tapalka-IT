@@ -9,14 +9,17 @@ interface IPosition {
 
 function App() {
   const [count, setCount] = useState(0);
+  const [isActive, setIsActive] = useState(false);
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
 
   const handleTap = (event: React.TouchEvent) => {
-    console.log(1, event);
+    setIsActive(true);
+    setTimeout(() => {
+      setIsActive(false)
+    }, 100);
 
     const touchCount = event.touches ? event.touches.length : 1;
-    // const touchCount = event.touches ? event.changedTouches.length : 1;
     setCount((prev) => prev + touchCount);
     setTapCount(touchCount);
     setTapPosition({
@@ -66,7 +69,7 @@ function App() {
           <img
             onTouchStart={handleTap}
             src="images/fruit.png"
-            className="fruit-image"
+            className={isActive ? 'fruit_scale' : 'fruit-image'}
           ></img>
           {tapCount > 0 && tapPosition && (
             <Box

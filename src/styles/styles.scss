@@ -40,33 +40,41 @@ body,
 
   .tap-counter {
     position: static;
-    // cursor: pointer;
+
+    .fruit_scale {
+      min-width: 260px;
+      max-width: 350px;
+      width: 50vw;
+      transition: transform 0.1s;
+      transition: transform 0.1s;
+      transform: scale(0.8);
+    }
 
     .fruit-image {
-        min-width: 260px;
-        max-width: 350px;
-        width: 50vw;
-        transition: transform 0.1s;
+      min-width: 260px;
+      max-width: 350px;
+      width: 50vw;
+      transition: transform 0.1s;
 
-        &:active {
-            transform: scale(0.9); 
-        }
+      // &:active {
+      //     transform: scale(0.9);
+      // }
     }
 
     .tap-message {
-        background: linear-gradient(to right, #FF6E05, #F83C27);
-        border-radius: 5px 20px 5px 20px;
-        padding: 5px 15px;
-        transition: opacity 0.5s;
-        font-size: 28px;
-        font-weight: bolder;
-        color: whitesmoke;
-        font-family: 'Japanese 3017';
+      background: linear-gradient(to right, #ff6e05, #f83c27);
+      border-radius: 5px 20px 5px 20px;
+      padding: 5px 15px;
+      transition: opacity 0.5s;
+      font-size: 28px;
+      font-weight: bolder;
+      color: whitesmoke;
+      font-family: "Japanese 3017";
 
-        &.fade-out {
-            opacity: 0;
-            transition: opacity 1s ease-out;
-        }
+      &.fade-out {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+      }
     }
-}
+  }
 }
