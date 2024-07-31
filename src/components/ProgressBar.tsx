@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
 const ProgressBar = ({ energy }: { energy: number }) => {
-  const fillWidth = `${Number((energy / 1000).toFixed(2)) * 100}%`;
+  //   const fillWidth = `${Number((energy / 1000).toFixed(2)) * 100}%`;
+  const fillWidth = `${energy}%`;
 
   return (
     <Box
@@ -25,10 +26,10 @@ const ProgressBar = ({ energy }: { energy: number }) => {
       >
         <Typography
           sx={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
             color: "white",
             fontWeight: "600",
             fontSize: "18px",
