@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import "./styles/styles.scss";
+import ProgressBar from "./components/ProgressBar";
 
 interface IPosition {
   x: number;
@@ -9,18 +10,22 @@ interface IPosition {
 
 function App() {
   const [count, setCount] = useState(0);
+  const [energy, setEnergy] = useState(1000);
   const [isActive, setIsActive] = useState(false);
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
 
   const handleTap = (event: React.TouchEvent) => {
+    if (!energy) return null;
+
     setIsActive(true);
     setTimeout(() => {
-      setIsActive(false)
+      setIsActive(false);
     }, 100);
 
     const touchCount = event.touches ? event.touches.length : 1;
     setCount((prev) => prev + touchCount);
+    setEnergy((prev) => prev - touchCount);
     setTapCount(touchCount);
     setTapPosition({
       x: event.touches[0].pageX,
@@ -31,17 +36,21 @@ function App() {
   function foo() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
-    } 
+    }
   }
 
-
   useEffect(() => {
-    const id = setTimeout(() => {
+    const idTap = setTimeout(() => {
       setTapCount(0);
     }, 1000);
 
+    const idEnergy = setInterval(() => {
+      setEnergy((prev) => (prev < 1000 ? prev + 1 : prev));
+    }, 1000);
+
     return () => {
-      clearTimeout(id);
+      clearTimeout(idTap);
+      clearInterval(idEnergy);
     };
   }, [count]);
 
@@ -69,7 +78,7 @@ function App() {
           <img
             onTouchStart={handleTap}
             src="images/fruit.png"
-            className={isActive ? 'fruit_scale' : 'fruit-image'}
+            className={isActive ? "fruit_scale fruit-image" : "fruit-image"}
           ></img>
           {tapCount > 0 && tapPosition && (
             <Box
@@ -96,7 +105,23 @@ function App() {
         >
           Продолжите на мобильном устройстве
         </Typography>
-        <Box></Box>
+        <Box
+          sx={{
+            mt: "60px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "8px",
+            width: "40%",
+          }}
+        >
+          <Typography
+            sx={{ color: "white", fontSize: "13px", fontWeight: "550" }}
+          >
+            Your Energy: {Math.floor((energy / 1000) * 100)}%
+          </Typography>
+          <ProgressBar energy={energy} />
+        </Box>
       </Box>
     </Box>
   );
