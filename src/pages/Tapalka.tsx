@@ -13,8 +13,8 @@ function Tapalka() {
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
 
-  const handleTap = (event: React.TouchEvent) => {
-    if (!energy) return;
+  const handleTap = (event: React.TouchEvent, energyCount: number) => {
+    if (!energyCount) return;
 
     setIsPressed(true);
     setTimeout(() => {
@@ -23,9 +23,9 @@ function Tapalka() {
 
     const eventTouch = event.touches.length < 4 ? event.touches.length : 3;
     const touchCount = eventTouch
-      ? energy - eventTouch >= 0
+      ? energyCount - eventTouch >= 0
         ? eventTouch
-        : energy
+        : energyCount
       : 1;
 
     setCount((prev) => prev + touchCount);
@@ -60,7 +60,7 @@ function Tapalka() {
     return () => {
       clearTimeout(idTap);
     };
-  }, [tapCount]);
+  }, [tapPosition]);
 
   useEffect(() => {
     const idAuto = setInterval(() => {
@@ -103,12 +103,14 @@ function Tapalka() {
           sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
         >
           <img
-            onTouchStart={(e) => debouncedFunc(e)}
+            onTouchStart={(e) => {
+              debouncedFunc(e, energy);
+            }}
             src="images/fruit.png"
             className={isPressed ? "fruit_scale fruit-image" : "fruit-image"}
           ></img>
           {tapCount > 0 && tapPosition && (
-            <Box
+            <Typography
               className="tap-message"
               style={{
                 position: "absolute",
@@ -118,14 +120,14 @@ function Tapalka() {
               }}
             >
               +{tapCount}
-            </Box>
+            </Typography>
           )}
         </Button>
         <MobileErr />
         <Box
           sx={{
             mt: "40px",
-            mb: "20px",
+            pb: "20px",
             display: { xs: "flex", md: "none" },
             flexDirection: "column",
             alignItems: "center",

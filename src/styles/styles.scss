@@ -2,6 +2,7 @@
 
 $main_back: url("/images/main_background.png");
 $score_back: url("/images/score_background.png");
+$coin_back: url("/images/touch_background.png");
 
 body,
 * {
@@ -15,6 +16,7 @@ body,
   background-repeat: no-repeat;
   background-size: cover;
   width: 100vw;
+  min-height: 715px;
   height: 100vh;
   padding: 8vh 5vw 0px;
 
@@ -45,22 +47,20 @@ body,
     }
 
     .fruit-image {
-      min-width: 300px;
-      max-width: 400px;
-      width: 68vw;
+      min-width: 270px;
+      max-width: 350px;
+      width: 72vw;
       transition: transform 0.1s;
       filter: drop-shadow(10px 0px 55px rgb(233, 0, 178))
         drop-shadow(0px 80px 40px black);
     }
 
     .tap-message {
-      background: linear-gradient(to right, #ff6e05, #f83c27);
-      border-radius: 5px 20px 5px 20px;
-      padding: 5px 15px;
+      line-height: 0px;
       transition: opacity 0.5s;
-      font-size: 28px;
-      font-weight: bolder;
-      color: whitesmoke;
+      font-size: 34px;
+      font-weight: 900;
+      color: orange;
       font-family: "Japanese 3017";
 
       &.fade-out {

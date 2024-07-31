@@ -1,11 +1,14 @@
-function Debounce(func: (args: React.TouchEvent) => void, delay: number) {
+function Debounce(
+  func: (event: React.TouchEvent, energy: number) => void,
+  delay: number
+) {
   let timeoutId: number | undefined;
 
-  return function (...args: React.TouchEvent[]) {
+  return function (...args: [React.TouchEvent, number]) {
     clearTimeout(timeoutId);
 
     timeoutId = setTimeout(() => {
-      func(args[0]);
+      func(args[0], args[1]);
     }, delay);
   };
 }
