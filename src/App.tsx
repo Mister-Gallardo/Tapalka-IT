@@ -10,7 +10,7 @@ interface IPosition {
 
 function App() {
   const [count, setCount] = useState(0);
-  const [energy, setEnergy] = useState(1000);
+  const [energy, setEnergy] = useState(10);
   const [isActive, setIsActive] = useState(false);
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
@@ -25,7 +25,7 @@ function App() {
 
     const touchCount = event.touches ? event.touches.length : 1;
     setCount((prev) => prev + touchCount);
-    setEnergy((prev) => prev - touchCount);
+    setEnergy((prev) => prev - touchCount >= 0 ? prev - touchCount : 0);
     setTapCount(touchCount);
     setTapPosition({
       x: event.touches[0].pageX,
@@ -87,6 +87,7 @@ function App() {
                 position: "absolute",
                 left: tapPosition.x,
                 top: tapPosition.y,
+                pointerEvents: 'none'
               }}
             >
               +{tapCount}
