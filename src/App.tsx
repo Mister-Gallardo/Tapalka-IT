@@ -108,7 +108,7 @@ function App() {
         <Box
           sx={{
             mt: "60px",
-            display: "flex",
+            display: { xs: "flex", md: "none" },
             flexDirection: "column",
             alignItems: "center",
             gap: "8px",
