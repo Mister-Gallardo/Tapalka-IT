@@ -13,15 +13,24 @@ function App() {
   const [tapCount, setTapCount] = useState(0);
 
   const handleTap = (event: React.TouchEvent) => {
+    console.log(1, event);
+
     const touchCount = event.touches ? event.touches.length : 1;
+    // const touchCount = event.touches ? event.changedTouches.length : 1;
     setCount((prev) => prev + touchCount);
     setTapCount(touchCount);
     setTapPosition({
       x: event.touches[0].pageX,
       y: event.touches[0].pageY,
     });
-    console.log(event)
+  };
+
+  function foo() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } 
   }
+
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -30,7 +39,7 @@ function App() {
 
     return () => {
       clearTimeout(id);
-    }
+    };
   }, [count]);
 
   return (
@@ -50,15 +59,23 @@ function App() {
         </Box>
         <Button
           className="tap-counter"
-          // onTouchStart={handleTap}
+          onClick={foo}
           disableRipple
           sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
         >
-          <img onTouchStart={handleTap} src="images/fruit.png" className="fruit-image"></img>
+          <img
+            onTouchStart={handleTap}
+            src="images/fruit.png"
+            className="fruit-image"
+          ></img>
           {tapCount > 0 && tapPosition && (
             <Box
               className="tap-message"
-              style={{ position: 'absolute', left: tapPosition.x, top: tapPosition.y }}
+              style={{
+                position: "absolute",
+                left: tapPosition.x,
+                top: tapPosition.y,
+              }}
             >
               +{tapCount}
             </Box>
