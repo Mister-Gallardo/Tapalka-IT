@@ -25,9 +25,10 @@ const ProgressBar = ({ energy }: { energy: number }) => {
       >
         <Typography
           sx={{
-            position: "absolute",
-            left: '42%',
-            top: '8px',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
             color: "white",
             fontWeight: "600",
             fontSize: "18px",

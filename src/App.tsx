@@ -107,7 +107,8 @@ function App() {
         </Typography>
         <Box
           sx={{
-            mt: "60px",
+            mt: "40px",
+            mb: '20px',
             display: { xs: "flex", md: "none" },
             flexDirection: "column",
             alignItems: "center",
