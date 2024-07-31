@@ -8,15 +8,27 @@ interface IPosition {
   y: number;
 }
 
+function debounce(func: (args: React.TouchEvent) => void, delay: number) {
+  let timeoutId: number | undefined;
+
+  return function (...args: React.TouchEvent[]) {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func(args[0]);
+    }, delay);
+  };
+}
+
 function App() {
   const [count, setCount] = useState(0);
-  const [energy, setEnergy] = useState(10);
+  const [energy, setEnergy] = useState(1000);
   const [isActive, setIsActive] = useState(false);
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
 
   const handleTap = (event: React.TouchEvent) => {
-    if (!energy) return null;
+    if (!energy) return;
 
     setIsActive(true);
     setTimeout(() => {
@@ -25,13 +37,15 @@ function App() {
 
     const touchCount = event.touches ? event.touches.length : 1;
     setCount((prev) => prev + touchCount);
-    setEnergy((prev) => prev - touchCount >= 0 ? prev - touchCount : 0);
+    setEnergy((prev) => (prev - touchCount >= 0 ? prev - touchCount : 0));
     setTapCount(touchCount);
     setTapPosition({
       x: event.touches[0].pageX,
       y: event.touches[0].pageY,
     });
   };
+
+  const debouncedFunc = debounce(handleTap, 110);
 
   function foo() {
     if (document.documentElement.requestFullscreen) {
@@ -76,7 +90,7 @@ function App() {
           sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
         >
           <img
-            onTouchStart={handleTap}
+            onTouchStart={(e) => debouncedFunc(e)}
             src="images/fruit.png"
             className={isActive ? "fruit_scale fruit-image" : "fruit-image"}
           ></img>
@@ -87,7 +101,7 @@ function App() {
                 position: "absolute",
                 left: tapPosition.x,
                 top: tapPosition.y,
-                pointerEvents: 'none'
+                pointerEvents: "none",
               }}
             >
               +{tapCount}
@@ -109,7 +123,7 @@ function App() {
         <Box
           sx={{
             mt: "40px",
-            mb: '20px',
+            mb: "20px",
             display: { xs: "flex", md: "none" },
             flexDirection: "column",
             alignItems: "center",
