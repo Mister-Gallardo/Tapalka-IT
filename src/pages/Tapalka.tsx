@@ -117,7 +117,7 @@ function Tapalka() {
                 left: tapPosition.x,
                 // отображаем немного повыше нажатия
                 // чтоб было видно на экране
-                top: tapPosition.y - 30,
+                top: tapPosition.y - 50,
                 pointerEvents: "none",
               }}
             >

@@ -56,9 +56,12 @@ body,
     }
 
     .tap-message {
-      line-height: 0px;
-      transition: opacity 0.5s;
-      font-size: 38px;
+      background: linear-gradient(to right, orange, red);
+      border-radius: 25px;
+      padding: 0px 12px;
+      // line-height: 0px;
+      font-size: 30px;
+      opacity: .9;
       font-weight: 900;
       color: white;
       font-family: "Japanese 3017";
