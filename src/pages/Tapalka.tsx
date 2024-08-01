@@ -8,7 +8,7 @@ import MobileErr from "../components/MobileErr";
 
 function Tapalka() {
   const [count, setCount] = useState(0);
-  const [energy, setEnergy] = useState(100);
+  const [energy, setEnergy] = useState(1000);
   const [isPressed, setIsPressed] = useState(false);
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
@@ -47,10 +47,13 @@ function Tapalka() {
   // которая будет оставлять выполнение только
   // последнего вызова метода onTouchStart
 
+  // плюс это поможет защитить приложение 
+  //от автокликеров
+
   // P.S. тут я специально использовал useState,
   // в который передал колбэк функцию,
   // чтобы не производить ненужных рендеров этой переменной
-  const [debouncedFunc] = useState(() => Debounce(handleTap, 100));
+  const [debouncedFunc] = useState(() => Debounce(handleTap, 70));
 
   useEffect(() => {
     const idTap = setTimeout(() => {
@@ -68,7 +71,7 @@ function Tapalka() {
     }, 1000);
 
     const idEnergy = setInterval(() => {
-      setEnergy((prev) => (prev < 100 ? prev + 1 : prev));
+      setEnergy((prev) => (prev < 1000 ? prev + 1 : prev));
     }, 1000);
 
     return () => {
@@ -140,8 +143,7 @@ function Tapalka() {
           <Typography
             sx={{ color: "white", fontSize: "13px", fontWeight: "550" }}
           >
-            {/* Your Energy: {Math.floor((energy / 100) * 100)}% */}
-            Your Energy: {energy}%
+            Your Energy: {Math.floor((energy / 1000) * 100)}%
           </Typography>
           <ProgressBar energy={energy} />
         </Box>

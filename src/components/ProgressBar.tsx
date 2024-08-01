@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
 const ProgressBar = ({ energy }: { energy: number }) => {
-  //   const fillWidth = `${Number((energy / 1000).toFixed(2)) * 100}%`;
-  const fillWidth = `${energy}%`;
+    const fillWidth = `${Number((energy / 1000).toFixed(2)) * 100}%`;
+  // const fillWidth = `${energy}%`;
 
   return (
     <Box
