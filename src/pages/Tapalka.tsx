@@ -4,7 +4,6 @@ import ProgressBar from "../components/ProgressBar";
 import { IPosition } from "../services/interfaces";
 import Debounce from "../heplers/Debounce";
 import SetFullScreen from "../heplers/SetFullScreen";
-import MobileErr from "../components/MobileErr";
 import { SendUpdate } from "../services/api/SendUpdate";
 import { GetData, PostData } from "../services/api/FetchData";
 import { SocketListener } from "../services/api/WebSocket";
@@ -166,26 +165,17 @@ function Tapalka() {
       <Box
         sx={{
           display: "flex",
-          gap: "25px",
+          gap: "15px",
           flexDirection: "column",
           justifyContent: "center",
           margin: "0 auto",
         }}
       >
-        <Box
-          component="div"
-          className="score"
-          sx={{ display: { xs: "flex", md: "none" } }}
-        >
+        <Box component="div" className="score">
           <img src="images/score_coin.png" width="30px"></img>
           <Typography>{coins}</Typography>
         </Box>
-        <Button
-          className="tap-counter"
-          onClick={SetFullScreen}
-          disableRipple
-          sx={{ display: { xs: "flex", md: "none" }, justifyContent: "center" }}
-        >
+        <Button className="tap-counter" onClick={SetFullScreen} disableRipple>
           <img
             onTouchStart={(e) => {
               debouncedFunc(e, energy);
@@ -209,12 +199,11 @@ function Tapalka() {
             </Typography>
           )}
         </Button>
-        <MobileErr />
         <Box
           sx={{
             mt: "40px",
             pb: "20px",
-            display: { xs: "flex", md: "none" },
+            display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "8px",

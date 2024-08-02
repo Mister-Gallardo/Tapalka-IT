@@ -16,11 +16,12 @@ body,
   background-repeat: no-repeat;
   background-size: cover;
   width: 100vw;
-  min-height: 715px;
+  min-height: 700px;
   height: 100vh;
   padding: 8vh 5vw 0px;
 
   .score {
+    display: flex;
     background-image: $score_back;
     background-repeat: no-repeat;
     background-position: center center;
@@ -40,6 +41,8 @@ body,
   }
 
   .tap-counter {
+    display: flex;
+    justify-content: center;
     position: static;
 
     .fruit_scale {
@@ -47,9 +50,9 @@ body,
     }
 
     .fruit-image {
-      min-width: 270px;
+      min-width: 250px;
       max-width: 350px;
-      width: 72vw;
+      width: 70vw;
       transition: transform 0.1s;
       filter: drop-shadow(10px 0px 55px rgb(233, 0, 178))
         drop-shadow(0px 80px 40px black);
@@ -61,7 +64,7 @@ body,
       padding: 0px 12px;
       // line-height: 0px;
       font-size: 30px;
-      opacity: .9;
+      opacity: 0.9;
       font-weight: 900;
       color: white;
       font-family: "Japanese 3017";

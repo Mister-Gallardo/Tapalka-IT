@@ -4,12 +4,12 @@ function MobileErr() {
   return (
     <Typography
       sx={{
-        display: { xs: "none", md: "block" },
-        fontSize: "38px",
-        fontWeight: "bold",
+        display: "block",
+        fontSize: "32px",
+        fontWeight: "bolder",
         color: "white",
         textAlign: "center",
-        marginTop: "100px",
+        marginTop: "130px",
       }}
     >
       Продолжите на мобильном устройстве
