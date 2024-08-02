@@ -1,18 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import ProgressBar from "../components/ProgressBar";
 import { IPosition } from "../services/interfaces";
 import Debounce from "../heplers/Debounce";
 import SetFullScreen from "../heplers/SetFullScreen";
 import MobileErr from "../components/MobileErr";
+import { SendUpdate } from "../services/api/SendUpdate";
+import { GetData, PostData } from "../services/api/FetchData";
+import { SocketListener } from "../services/api/WebSocket";
+
+// инициализируем WS и создаём очереди для запросов
+let coinsSocket: WebSocket;
+const coinsMessageQueue: number[] = [];
+let energySocket: WebSocket;
+const energyMessageQueue: number[] = [];
 
 function Tapalka() {
-  const [count, setCount] = useState(0);
+  // проверяем на наличие айди в памяти браузера
+  const [userID, setUserID] = useState<string | null>(
+    localStorage.getItem("userID") ? localStorage.getItem("userID") : null
+  );
+  // для coins и energy создаём стейт и реф
+  // стейт используем для основной логики
+  // а реф нам нужен только для того, чтобы отправлять данные на бэк перед закрытием сайта
+  const [coins, setCoins] = useState(0);
+  const coinsRef = useRef(0);
   const [energy, setEnergy] = useState(1000);
+  const energyRef = useRef(1000);
+  // isPressed используется для анимации
   const [isPressed, setIsPressed] = useState(false);
+  // tapPositin - место нажатия, tapCount - количество одновременных нажатий
   const [tapPosition, setTapPosition] = useState<IPosition | null>(null);
   const [tapCount, setTapCount] = useState(0);
 
+  // в функции handleTap вся логика "тапов"
   const handleTap = (event: React.TouchEvent, energyCount: number) => {
     if (!energyCount) return;
 
@@ -21,6 +42,7 @@ function Tapalka() {
       setIsPressed(false);
     }, 100);
 
+    // ограничиваем количество "тапов" максимум в 4 и проверяем на остаток энергии
     const eventTouch = event.touches.length < 4 ? event.touches.length : 3;
     const touchCount = eventTouch
       ? energyCount - eventTouch >= 0
@@ -28,7 +50,7 @@ function Tapalka() {
         : energyCount
       : 1;
 
-    setCount((prev) => prev + touchCount);
+    setCoins((prev) => prev + touchCount);
     setEnergy((prev) => (prev - touchCount >= 0 ? prev - touchCount : 0));
     setTapCount(touchCount);
     setTapPosition({
@@ -43,18 +65,17 @@ function Tapalka() {
   // метод onTouchStart вызовется три раза:
   // для нажатия одного пальца, двух и, наконец, трёх.
   // Данная система ломает логику нашего приложения.
-  // Из-за этого я создал функци debounce,
+  // Из-за этого мы создали функци debounce,
   // которая будет оставлять выполнение только
-  // последнего вызова метода onTouchStart
+  // последнего вызова метода onTouchStart.
+  // Плюс это поможет защитить приложение от автокликеров
 
-  // плюс это поможет защитить приложение 
-  //от автокликеров
-
-  // P.S. тут я специально использовал useState,
-  // в который передал колбэк функцию,
+  // P.S. тут специально используется useState,
+  // в который передана колбэк функция,
   // чтобы не производить ненужных рендеров этой переменной
   const [debouncedFunc] = useState(() => Debounce(handleTap, 70));
 
+  // убираем tap-message через секунду после отображения
   useEffect(() => {
     const idTap = setTimeout(() => {
       setTapCount(0);
@@ -65,20 +86,80 @@ function Tapalka() {
     };
   }, [tapPosition]);
 
+  // для обрабатывания выхоад пользователя избран слушатель на beforeunload
+  // этот метод будет срабатывать перед закрытием (обновлением) страницы
+  // соответственно тут мы будем отправлять на сервер информацию о пользователе
   useEffect(() => {
-    const idAuto = setInterval(() => {
-      setCount((prev) => prev + 1);
-    }, 1000);
+    userID &&
+      window.addEventListener("beforeunload", () =>
+        PostData(userID, coinsRef.current, energyRef.current)
+      );
 
-    const idEnergy = setInterval(() => {
+    const idAuto = setInterval(() => {
+      setCoins((prev) => prev + 1);
       setEnergy((prev) => (prev < 1000 ? prev + 1 : prev));
     }, 1000);
 
+    // создаём и сохраняем айди пользователя либо подгружаем данные
+    if (!userID) {
+      const userId = Date.now().toString();
+      setUserID(userId);
+      localStorage.setItem("userID", userId);
+    } else {
+      userID && GetData(userID, setCoins, setEnergy);
+    }
+
     return () => {
-      clearInterval(idEnergy);
+      userID &&
+        window.removeEventListener("beforeunload", () =>
+          PostData(userID, coinsRef.current, energyRef.current)
+        );
       clearInterval(idAuto);
     };
   }, []);
+
+  useEffect(() => {
+    // создаём WS переменные и прописываем логику
+    if (userID) {
+      try {
+        coinsSocket = new WebSocket(
+          `ws://127.0.0.1:8002/ws/coins_gain/${userID}/`
+        );
+        energySocket = new WebSocket(
+          `ws://127.0.0.1:8002/ws/energy_gain/${userID}/`
+        );
+      } catch (e) {
+        console.log("ws error: ", e);
+      }
+      // Слушатели для сокетов
+      SocketListener(coinsSocket, coinsMessageQueue);
+      SocketListener(energySocket, energyMessageQueue);
+    }
+
+    // в функции очистки закрываем сокеты
+    return () => {
+      if (coinsSocket) coinsSocket.close();
+      if (energySocket) energySocket.close();
+    };
+  }, [userID]);
+
+  useEffect(() => {
+    coinsRef.current = coins;
+    energyRef.current = energy;
+    if (coinsSocket && energySocket) {
+      // при изменении значений отправляем на бэк эти данные
+      SendUpdate({
+        socket: coinsSocket,
+        value: coins,
+        messageQueue: coinsMessageQueue,
+      });
+      SendUpdate({
+        socket: energySocket,
+        value: energy,
+        messageQueue: energyMessageQueue,
+      });
+    }
+  }, [coins, energy]);
 
   return (
     <Box className="main">
@@ -97,7 +178,7 @@ function Tapalka() {
           sx={{ display: { xs: "flex", md: "none" } }}
         >
           <img src="images/score_coin.png" width="30px"></img>
-          <Typography>{count}</Typography>
+          <Typography>{coins}</Typography>
         </Box>
         <Button
           className="tap-counter"
