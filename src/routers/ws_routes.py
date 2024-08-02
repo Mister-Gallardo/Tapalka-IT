@@ -59,7 +59,7 @@ async def websocket_count_gain(websocket: WebSocket, user_id: str):
                     await manager.send_message(f"Counter updated: {counter}", websocket)
                 else:
                     await manager.send_message("No counter provided", websocket)
-                await asyncio.sleep(1)
+                # await asyncio.sleep(1)
             except WebSocketDisconnect:
                 break
     except Exception as e:
@@ -85,7 +85,7 @@ async def websocket_energy_gain(websocket: WebSocket, user_id: str):
                     await manager.send_message(f"Energy updated: {energy}", websocket)
                 else:
                     await manager.send_message("No energy provided", websocket)
-                await asyncio.sleep(1)
+                # await asyncio.sleep(1)
             except WebSocketDisconnect:
                 break
     except Exception as e:
