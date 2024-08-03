@@ -5,12 +5,10 @@
 
 ## Ссылки для скачивания базы репозитория
 
-SSH clone URL: git@gitlab.itworkin.com:itworkin_public/test_frontend.git
-
-HTTPS clone URL: https://gitlab.itworkin.com/itworkin_public/test_frontend.git
+HTTPS clone URL: https://github.com/Mister-Gallardo/Tapalka-IT.git
 
 ## Скопируйте репозиторий
-git clone https://gitlab.itworkin.com/itworkin_public/test_frontend.git
+git clone https://github.com/Mister-Gallardo/Tapalka-IT.git
 
 ## Переменные окружения
 Для работы приложения необходимо добавить следующие переменные окружения
@@ -81,5 +79,3 @@ get {название ключа} - получить значение ключа
 
 Все эндпоинты представлены в папке src/routes
 user_id = любое int число
-
-[Docs](http://127.0.0.1:8002/docs#/)
